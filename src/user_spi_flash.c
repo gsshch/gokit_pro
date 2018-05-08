@@ -30,7 +30,6 @@ void spi_flash_init(void){
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -46,7 +45,6 @@ void spi_flash_init(void){
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;
 //	SPI_InitStructure.SPI_FirstBit = ;
-
 
 
 }

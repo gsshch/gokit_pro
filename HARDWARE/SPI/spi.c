@@ -1,20 +1,21 @@
 #include "spi.h"
 #include "usart.h"
+#include "stm32f10x_gpio.h"
 
-//ÒÔÏÂÊÇSPIÄ£¿éµÄ³õÊ¼»¯´úÂë£¬ÅäÖÃ³ÉÖ÷»úÄ£Ê½£¬·ÃÎÊSD Card/W25X16/24L01/JF24C							  
-//SPI¿Ú³õÊ¼»¯
-//ÕâÀïÕëÊÇ¶ÔSPI2µÄ³õÊ¼»¯
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SPIÄ£ï¿½ï¿½Ä³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ë£¬ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SD Card/W25X16/24L01/JF24C							  
+//SPIï¿½Ú³ï¿½Ê¼ï¿½ï¿½
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½SPI2ï¿½Ä³ï¿½Ê¼ï¿½ï¿½
 
  void SPI1_Init(void)
 {
  	GPIO_InitTypeDef GPIO_InitStructure;
   	SPI_InitTypeDef  SPI_InitStructure;
 
-	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOA, ENABLE );//PORTAÊ±ÖÓÊ¹ÄÜ 
-	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_SPI1,  ENABLE );//SPI1Ê±ÖÓÊ¹ÄÜ 	
+	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOA, ENABLE );//PORTAÊ±ï¿½ï¿½Ê¹ï¿½ï¿½ 
+	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_SPI1,  ENABLE );//SPI1Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ 	
  
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7 ;	  //Pin_5 sck  pin7 MOSI
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //PA5/7/¸´ÓÃÍÆÍìÊä³ö 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //PA5/7/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -38,70 +39,70 @@
 
 
 
- //	GPIO_SetBits(GPIOA,GPIO_Pin_5|GPIO_Pin_7);  //PB13/14/15ÉÏÀ­
+ //	GPIO_SetBits(GPIOA,GPIO_Pin_5|GPIO_Pin_7);  //PB13/14/15ï¿½ï¿½ï¿½ï¿½
 
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;  //ÉèÖÃSPIµ¥Ïò»òÕßË«ÏòµÄÊý¾ÝÄ£Ê½:SPIÉèÖÃÎªË«ÏßË«ÏòÈ«Ë«¹¤  SPI_Direction_1Line_Tx
-	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;		//ÉèÖÃSPI¹¤×÷Ä£Ê½:ÉèÖÃÎªÖ÷SPI
-	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;		//ÉèÖÃSPIµÄÊý¾Ý´óÐ¡:SPI·¢ËÍ½ÓÊÕ8Î»Ö¡½á¹¹
-	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		//Ñ¡ÔñÁË´®ÐÐÊ±ÖÓµÄÎÈÌ¬:Ê±ÖÓÐü¿Õ¸ß
-	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;	//Êý¾Ý²¶»ñÓÚµÚ¶þ¸öÊ±ÖÓÑØ
-	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;		//NSSÐÅºÅÓÉÓ²¼þ£¨NSS¹Ü½Å£©»¹ÊÇÈí¼þ£¨Ê¹ÓÃSSIÎ»£©¹ÜÀí:ÄÚ²¿NSSÐÅºÅÓÐSSIÎ»¿ØÖÆ
-	SPI_InitStructure.SPI_BaudRatePrescaler =SPI_BaudRatePrescaler_2;		//¶¨Òå²¨ÌØÂÊÔ¤·ÖÆµµÄÖµ:²¨ÌØÂÊÔ¤·ÖÆµÖµÎª16
-	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	//Ö¸¶¨Êý¾Ý´«Êä´ÓMSBÎ»»¹ÊÇLSBÎ»¿ªÊ¼:Êý¾Ý´«Êä´ÓMSBÎ»¿ªÊ¼
-	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRCÖµ¼ÆËãµÄ¶àÏîÊ½
-	SPI_Init(SPI1, &SPI_InitStructure);  //¸ù¾ÝSPI_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèSPIx¼Ä´æÆ÷
+	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;  //ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½:SPIï¿½ï¿½ï¿½ï¿½ÎªË«ï¿½ï¿½Ë«ï¿½ï¿½È«Ë«ï¿½ï¿½  SPI_Direction_1Line_Tx
+	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;		//ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½Ä£Ê½:ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½SPI
+	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;		//ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½Ð¡:SPIï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½8Î»Ö¡ï¿½á¹¹
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		//Ñ¡ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½Ê±ï¿½Óµï¿½ï¿½ï¿½Ì¬:Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½
+	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;	//ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ÚµÚ¶ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;		//NSSï¿½Åºï¿½ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½NSSï¿½Ü½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½SSIÎ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:ï¿½Ú²ï¿½NSSï¿½Åºï¿½ï¿½ï¿½SSIÎ»ï¿½ï¿½ï¿½ï¿½
+	SPI_InitStructure.SPI_BaudRatePrescaler =SPI_BaudRatePrescaler_2;		//ï¿½ï¿½ï¿½å²¨ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Æµï¿½ï¿½Öµ:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ÆµÖµÎª16
+	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	//Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½MSBÎ»ï¿½ï¿½ï¿½ï¿½LSBÎ»ï¿½ï¿½Ê¼:ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½MSBÎ»ï¿½ï¿½Ê¼
+	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRCÖµï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Ê½
+	SPI_Init(SPI1, &SPI_InitStructure);  //ï¿½ï¿½ï¿½ï¿½SPI_InitStructï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SPIxï¿½Ä´ï¿½ï¿½ï¿½
  
-	SPI_Cmd(SPI1, ENABLE); //Ê¹ÄÜSPIÍâÉè
+	SPI_Cmd(SPI1, ENABLE); //Ê¹ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½
 	
-	//SPI2_ReadWriteByte(0xff);//Æô¶¯´«Êä	 
+	//SPI2_ReadWriteByte(0xff);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	 
 
 
-//	SPI1_SetSpeed(SPI_BaudRatePrescaler_256);//ÉèÖÃÎª18MÊ±ÖÓ,¸ßËÙÄ£Ê½
+//	SPI1_SetSpeed(SPI_BaudRatePrescaler_256);//ï¿½ï¿½ï¿½ï¿½Îª18MÊ±ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ä£Ê½
 
-  //SPI ËÙ¶ÈÉèÖÃº¯Êý
+  //SPI ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½
 //SpeedSet:
-//SPI_BaudRatePrescaler_2   2·ÖÆµ   (SPI 36M@sys 72M)
-//SPI_BaudRatePrescaler_8   8·ÖÆµ   (SPI 9M@sys 72M)
-//SPI_BaudRatePrescaler_16  16·ÖÆµ  (SPI 4.5M@sys 72M)
-//SPI_BaudRatePrescaler_256 256·ÖÆµ (SPI 281.25K@sys 72M)
+//SPI_BaudRatePrescaler_2   2ï¿½ï¿½Æµ   (SPI 36M@sys 72M)
+//SPI_BaudRatePrescaler_8   8ï¿½ï¿½Æµ   (SPI 9M@sys 72M)
+//SPI_BaudRatePrescaler_16  16ï¿½ï¿½Æµ  (SPI 4.5M@sys 72M)
+//SPI_BaudRatePrescaler_256 256ï¿½ï¿½Æµ (SPI 281.25K@sys 72M)
 } 
 void SPI2_Init(void)
 {
  	GPIO_InitTypeDef GPIO_InitStructure;
   	SPI_InitTypeDef  SPI_InitStructure;
 
-	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOB, ENABLE );//PORTBÊ±ÖÓÊ¹ÄÜ 
-	RCC_APB1PeriphClockCmd(	RCC_APB1Periph_SPI2,  ENABLE );//SPI2Ê±ÖÓÊ¹ÄÜ 	
+	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_GPIOB, ENABLE );//PORTBÊ±ï¿½ï¿½Ê¹ï¿½ï¿½ 
+	RCC_APB1PeriphClockCmd(	RCC_APB1Periph_SPI2,  ENABLE );//SPI2Ê±ï¿½ï¿½Ê¹ï¿½ï¿½ 	
  
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //PB13/14/15¸´ÓÃÍÆÍìÊä³ö 
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;  //PB13/14/15ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
- 	GPIO_SetBits(GPIOB,GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15);  //PB13/14/15ÉÏÀ­
+ 	GPIO_SetBits(GPIOB,GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15);  //PB13/14/15ï¿½ï¿½ï¿½ï¿½
 
-	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;  //ÉèÖÃSPIµ¥Ïò»òÕßË«ÏòµÄÊý¾ÝÄ£Ê½:SPIÉèÖÃÎªË«ÏßË«ÏòÈ«Ë«¹¤
-	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;		//ÉèÖÃSPI¹¤×÷Ä£Ê½:ÉèÖÃÎªÖ÷SPI
-	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;		//ÉèÖÃSPIµÄÊý¾Ý´óÐ¡:SPI·¢ËÍ½ÓÊÕ8Î»Ö¡½á¹¹
-	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		//Ñ¡ÔñÁË´®ÐÐÊ±ÖÓµÄÎÈÌ¬:Ê±ÖÓÐü¿Õ¸ß
-	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;	//Êý¾Ý²¶»ñÓÚµÚ¶þ¸öÊ±ÖÓÑØ
-	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;		//NSSÐÅºÅÓÉÓ²¼þ£¨NSS¹Ü½Å£©»¹ÊÇÈí¼þ£¨Ê¹ÓÃSSIÎ»£©¹ÜÀí:ÄÚ²¿NSSÐÅºÅÓÐSSIÎ»¿ØÖÆ
-	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;		//¶¨Òå²¨ÌØÂÊÔ¤·ÖÆµµÄÖµ:²¨ÌØÂÊÔ¤·ÖÆµÖµÎª16
-	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	//Ö¸¶¨Êý¾Ý´«Êä´ÓMSBÎ»»¹ÊÇLSBÎ»¿ªÊ¼:Êý¾Ý´«Êä´ÓMSBÎ»¿ªÊ¼
-	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRCÖµ¼ÆËãµÄ¶àÏîÊ½
-	SPI_Init(SPI2, &SPI_InitStructure);  //¸ù¾ÝSPI_InitStructÖÐÖ¸¶¨µÄ²ÎÊý³õÊ¼»¯ÍâÉèSPIx¼Ä´æÆ÷
+	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;  //ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½:SPIï¿½ï¿½ï¿½ï¿½ÎªË«ï¿½ï¿½Ë«ï¿½ï¿½È«Ë«ï¿½ï¿½
+	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;		//ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½Ä£Ê½:ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½SPI
+	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;		//ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½Ð¡:SPIï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½8Î»Ö¡ï¿½á¹¹
+	SPI_InitStructure.SPI_CPOL = SPI_CPOL_High;		//Ñ¡ï¿½ï¿½ï¿½Ë´ï¿½ï¿½ï¿½Ê±ï¿½Óµï¿½ï¿½ï¿½Ì¬:Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½
+	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;	//ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ÚµÚ¶ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;		//NSSï¿½Åºï¿½ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½NSSï¿½Ü½Å£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½SSIÎ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:ï¿½Ú²ï¿½NSSï¿½Åºï¿½ï¿½ï¿½SSIÎ»ï¿½ï¿½ï¿½ï¿½
+	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_16;		//ï¿½ï¿½ï¿½å²¨ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Æµï¿½ï¿½Öµ:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ÆµÖµÎª16
+	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;	//Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½MSBÎ»ï¿½ï¿½ï¿½ï¿½LSBÎ»ï¿½ï¿½Ê¼:ï¿½ï¿½ï¿½Ý´ï¿½ï¿½ï¿½ï¿½MSBÎ»ï¿½ï¿½Ê¼
+	SPI_InitStructure.SPI_CRCPolynomial = 7;	//CRCÖµï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½Ê½
+	SPI_Init(SPI2, &SPI_InitStructure);  //ï¿½ï¿½ï¿½ï¿½SPI_InitStructï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SPIxï¿½Ä´ï¿½ï¿½ï¿½
  
-	SPI_Cmd(SPI2, ENABLE); //Ê¹ÄÜSPIÍâÉè
+	SPI_Cmd(SPI2, ENABLE); //Ê¹ï¿½ï¿½SPIï¿½ï¿½ï¿½ï¿½
 	
-	SPI2_ReadWriteByte(0xff);//Æô¶¯´«Êä	 
+	SPI2_ReadWriteByte(0xff);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	 
 
 }   
-//SPI ËÙ¶ÈÉèÖÃº¯Êý
+//SPI ï¿½Ù¶ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½
 //SpeedSet:
-//SPI_BaudRatePrescaler_2   2·ÖÆµ   (SPI 36M@sys 72M)
-//SPI_BaudRatePrescaler_8   8·ÖÆµ   (SPI 9M@sys 72M)
-//SPI_BaudRatePrescaler_16  16·ÖÆµ  (SPI 4.5M@sys 72M)
-//SPI_BaudRatePrescaler_256 256·ÖÆµ (SPI 281.25K@sys 72M)
+//SPI_BaudRatePrescaler_2   2ï¿½ï¿½Æµ   (SPI 36M@sys 72M)
+//SPI_BaudRatePrescaler_8   8ï¿½ï¿½Æµ   (SPI 9M@sys 72M)
+//SPI_BaudRatePrescaler_16  16ï¿½ï¿½Æµ  (SPI 4.5M@sys 72M)
+//SPI_BaudRatePrescaler_256 256ï¿½ï¿½Æµ (SPI 281.25K@sys 72M)
   
 void SPI2_SetSpeed(u8 SpeedSet)
 {
@@ -110,33 +111,33 @@ void SPI2_SetSpeed(u8 SpeedSet)
 	SPI_Cmd(SPI2,ENABLE); 
 } 
 
-//SPIx ¶ÁÐ´Ò»¸ö×Ö½Ú
-//TxData:ÒªÐ´ÈëµÄ×Ö½Ú
-//·µ»ØÖµ:¶ÁÈ¡µ½µÄ×Ö½Ú
+//SPIx ï¿½ï¿½Ð´Ò»ï¿½ï¿½ï¿½Ö½ï¿½
+//TxData:ÒªÐ´ï¿½ï¿½ï¿½ï¿½Ö½ï¿½
+//ï¿½ï¿½ï¿½ï¿½Öµ:ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ö½ï¿½
 u8 SPI2_ReadWriteByte(u8 TxData)
 {		
 	u8 retry=0;				 	
-	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET) //¼ì²éÖ¸¶¨µÄSPI±êÖ¾Î»ÉèÖÃÓë·ñ:·¢ËÍ»º´æ¿Õ±êÖ¾Î»
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET) //ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½Ö¾Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½Õ±ï¿½Ö¾Î»
 		{
 		retry++;
 		if(retry>200)return 0;
 		}			  
-	SPI_I2S_SendData(SPI2, TxData); //Í¨¹ýÍâÉèSPIx·¢ËÍÒ»¸öÊý¾Ý
+	SPI_I2S_SendData(SPI2, TxData); //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½SPIxï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	retry=0;
 
-	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET)//¼ì²éÖ¸¶¨µÄSPI±êÖ¾Î»ÉèÖÃÓë·ñ:½ÓÊÜ»º´æ·Ç¿Õ±êÖ¾Î»
+	while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET)//ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½SPIï¿½ï¿½Ö¾Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½Ç¿Õ±ï¿½Ö¾Î»
 		{
 		retry++;
 		if(retry>200)return 0;
 		}	  						    
-	return SPI_I2S_ReceiveData(SPI2); //·µ»ØÍ¨¹ýSPIx×î½ü½ÓÊÕµÄÊý¾Ý					    
+	return SPI_I2S_ReceiveData(SPI2); //ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½SPIxï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½					    
 }
 u8 SPI_WriteByte(SPI_TypeDef* SPIx,u8 Byte)
 {
-	while((SPIx->SR&SPI_I2S_FLAG_TXE)==RESET);		//µÈ´ý·¢ËÍÇø¿Õ	  
-	SPIx->DR=Byte;	 	//·¢ËÍÒ»¸öbyte   
-	while((SPIx->SR&SPI_I2S_FLAG_RXNE)==RESET);//µÈ´ý½ÓÊÕÍêÒ»¸öbyte  
-	return SPIx->DR;          	     //·µ»ØÊÕµ½µÄÊý¾Ý			
+	while((SPIx->SR&SPI_I2S_FLAG_TXE)==RESET);		//ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	  
+	SPIx->DR=Byte;	 	//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte   
+	while((SPIx->SR&SPI_I2S_FLAG_RXNE)==RESET);//ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½byte  
+	return SPIx->DR;          	     //ï¿½ï¿½ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½			
 }
 
 
@@ -146,7 +147,7 @@ u8 SPI_WriteByte(SPI_TypeDef* SPIx,u8 Byte)
 
 
 
-
+spi_init
 
 
 
