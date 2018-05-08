@@ -45,7 +45,7 @@ void spi_flash_init(void){
 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_2Edge;
 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft;
 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_4;
-//	SPI_InitStructure.SPI_
+	SPI_InitStructure.SPI_FirstBit = ;
 
 
 
