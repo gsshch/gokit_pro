@@ -3,7 +3,7 @@
 #include "sys.h"	 
 #include "stdlib.h"
 
-//SPIÏÔÊ¾ÆÁ½Ó¿Ú
+//SPIæ˜¾ç¤ºå±æ¥å£
 //LCD_RST
 #define SPILCD_RST_SET  GPIO_SetBits(GPIOB, GPIO_Pin_0)//PB0 
 #define SPILCD_RST_RESET GPIO_ResetBits(GPIOB, GPIO_Pin_0)//PB0  
@@ -15,40 +15,40 @@
 #define SPILCD_CS_RESET  GPIO_ResetBits(GPIOA, GPIO_Pin_4)//PA4 
 
   
-//LCDÖØÒª²ÎÊı¼¯
+//LCDé‡è¦å‚æ•°é›†
 typedef struct  
 { 					    
-	u16 width;			//LCD ¿í¶È
-	u16 height;			//LCD ¸ß¶È
+	u16 width;			//LCD å®½åº¦
+	u16 height;			//LCD é«˜åº¦
 	u16 id;				//LCD ID
-	u8	wramcmd;		//¿ªÊ¼Ğ´gramÖ¸Áî
-	u8  setxcmd;		//ÉèÖÃx×ø±êÖ¸Áî
-	u8  setycmd;		//ÉèÖÃy×ø±êÖ¸Áî	 
+	u8	wramcmd;		//å¼€å§‹å†™gramæŒ‡ä»¤
+	u8  setxcmd;		//è®¾ç½®xåæ ‡æŒ‡ä»¤
+	u8  setycmd;		//è®¾ç½®yåæ ‡æŒ‡ä»¤
 }_lcd_dev; 	  
 
-//LCD²ÎÊı
-extern _lcd_dev lcddev;	//¹ÜÀíLCDÖØÒª²ÎÊı
-//LCDµÄ»­±ÊÑÕÉ«ºÍ±³¾°É«	   
-extern u16  POINT_COLOR;//Ä¬ÈÏºìÉ«    
-extern u16  BACK_COLOR; //±³¾°ÑÕÉ«.Ä¬ÈÏÎª°×É«
+//LCDå‚æ•°
+extern _lcd_dev lcddev;	//ç®¡ç†LCDé‡è¦å‚æ•°
+//LCDçš„ç”»ç¬”é¢œè‰²å’ŒèƒŒæ™¯è‰²
+extern u16  POINT_COLOR;//é»˜è®¤çº¢è‰²
+extern u16  BACK_COLOR; //èƒŒæ™¯é¢œè‰².é»˜è®¤ä¸ºç™½è‰²
 
 
 //////////////////////////////////////////////////////////////////////////////////	 
-//-----------------LCD¶Ë¿Ú¶¨Òå---------------- 
+//-----------------LCDç«¯å£å®šä¹‰----------------
 #define	LCD_REST PBout(1) //LCD REST    		 PB1 	    
-//LCDµØÖ·½á¹¹Ìå
+//LCDåœ°å€ç»“æ„ä½“
 typedef struct
 {
 	u16 LCD_REG;
 	u16 LCD_RAM;
 } LCD_TypeDef;
-//Ê¹ÓÃNOR/SRAMµÄ Bank1.sector4,µØÖ·Î»HADDR[27,26]=11 A10×÷ÎªÊı¾İÃüÁîÇø·ÖÏß 
-//×¢ÒâÉèÖÃÊ±STM32ÄÚ²¿»áÓÒÒÆÒ»Î»¶ÔÆä! 111110=0X3E			    
+//ä½¿ç”¨NOR/SRAMçš„ Bank1.sector4,åœ°å€ä½HADDR[27,26]=11 A10ä½œä¸ºæ•°æ®å‘½ä»¤åŒºåˆ†çº¿
+//æ³¨æ„è®¾ç½®æ—¶STM32å†…éƒ¨ä¼šå³ç§»ä¸€ä½å¯¹å…¶! 111110=0X3E
 #define LCD_BASE        ((u32)(0x60000000 | 0x0007FFFE))
 #define LCD             ((LCD_TypeDef *) LCD_BASE)
 //////////////////////////////////////////////////////////////////////////////////
 
-//»­±ÊÑÕÉ«
+//ç”»ç¬”é¢œè‰²
 #define WHITE         	 0xFFFF
 #define BLACK         	 0x0000	  
 #define BLUE         	 0x001F  
@@ -60,47 +60,47 @@ typedef struct
 #define GREEN         	 0x07E0
 #define CYAN          	 0x7FFF
 #define YELLOW        	 0xFFE0
-#define BROWN 			 0XBC40 //×ØÉ«
-#define BRRED 			 0XFC07 //×ØºìÉ«
-#define GRAY  			 0X8430 //»ÒÉ«
-//GUIÑÕÉ«
+#define BROWN 			 0XBC40 //æ£•è‰²
+#define BRRED 			 0XFC07 //æ£•çº¢è‰²
+#define GRAY  			 0X8430 //ç°è‰²
+//GUIé¢œè‰²
 
-#define DARKBLUE      	 0X01CF	//ÉîÀ¶É«
-#define LIGHTBLUE      	 0X7D7C	//Ç³À¶É«  
-#define GRAYBLUE       	 0X5458 //»ÒÀ¶É«
-//ÒÔÉÏÈıÉ«ÎªPANELµÄÑÕÉ« 
+#define DARKBLUE      	 0X01CF	//æ·±è“è‰²
+#define LIGHTBLUE      	 0X7D7C	//æµ…è“è‰²
+#define GRAYBLUE       	 0X5458 //ç°è“è‰²
+//ä»¥ä¸Šä¸‰è‰²ä¸ºPANELçš„é¢œè‰²
  
-#define LIGHTGREEN     	 0X841F //Ç³ÂÌÉ«
-//#define LIGHTGRAY        0XEF5B //Ç³»ÒÉ«(PANNEL)
-#define LGRAY 			 0XC618 //Ç³»ÒÉ«(PANNEL),´°Ìå±³¾°É«
+#define LIGHTGREEN     	 0X841F //æµ…ç»¿è‰²
+//#define LIGHTGRAY        0XEF5B //æµ…ç°è‰²(PANNEL)
+#define LGRAY 			 0XC618 //æµ…ç°è‰²(PANNEL),çª—ä½“èƒŒæ™¯è‰²
 
-#define LGRAYBLUE        0XA651 //Ç³»ÒÀ¶É«(ÖĞ¼ä²ãÑÕÉ«)
-#define LBBLUE           0X2B12 //Ç³×ØÀ¶É«(Ñ¡ÔñÌõÄ¿µÄ·´É«)
+#define LGRAYBLUE        0XA651 //æµ…ç°è“è‰²(ä¸­é—´å±‚é¢œè‰²)
+#define LBBLUE           0X2B12 //æµ…æ£•è“è‰²(é€‰æ‹©æ¡ç›®çš„åè‰²)
 	    															  
-void LCD_Init(void);													   	//³õÊ¼»¯
-void LCD_DisplayOn(void);													//¿ªÏÔÊ¾
-void LCD_DisplayOff(void);													//¹ØÏÔÊ¾
-void LCD_Clear(u16 Color);	 												//ÇåÆÁ
-void LCD_SetCursor(u16 Xpos, u16 Ypos);										//ÉèÖÃ¹â±ê
-void LCD_DrawPoint(u16 x,u16 y);											//»­µã
-void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color);								//¿ìËÙ»­µã
-void Draw_Circle(u16 x0,u16 y0,u8 r);										//»­Ô²
-void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);							//»­Ïß
-void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2);		   				//»­¾ØĞÎ
-void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color);		   				//Ìî³äµ¥É«
-void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color);				//Ìî³äÖ¸¶¨ÑÕÉ«
-void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode);						//ÏÔÊ¾Ò»¸ö×Ö·û
-void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						//ÏÔÊ¾Ò»¸öÊı×Ö
-void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				//ÏÔÊ¾ Êı×Ö
-void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);		//ÏÔÊ¾Ò»¸ö×Ö·û´®,12/16×ÖÌå
+void LCD_Init(void);													   	//åˆå§‹åŒ–
+void LCD_DisplayOn(void);													//å¼€æ˜¾ç¤º
+void LCD_DisplayOff(void);													//å…³æ˜¾ç¤º
+void LCD_Clear(u16 Color);	 												//æ¸…å±
+void LCD_SetCursor(u16 Xpos, u16 Ypos);										//è®¾ç½®å…‰æ ‡
+void LCD_DrawPoint(u16 x,u16 y);											//ç”»ç‚¹
+void LCD_Fast_DrawPoint(u16 x,u16 y,u16 color);								//å¿«é€Ÿç”»ç‚¹
+void Draw_Circle(u16 x0,u16 y0,u8 r);										//ç”»åœ†
+void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);							//ç”»çº¿
+void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2);		   				//ç”»çŸ©å½¢
+void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color);		   				//å¡«å……å•è‰²
+void LCD_Color_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 *color);				//å¡«å……æŒ‡å®šé¢œè‰²
+void LCD_ShowChar(u16 x,u16 y,u8 num,u8 size,u8 mode);						//æ˜¾ç¤ºä¸€ä¸ªå­—ç¬¦
+void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size);  						//æ˜¾ç¤ºä¸€ä¸ªæ•°å­—
+void LCD_ShowxNum(u16 x,u16 y,u32 num,u8 len,u8 size,u8 mode);				//æ˜¾ç¤º æ•°å­—
+void LCD_ShowString(u16 x,u16 y,u16 width,u16 height,u8 size,u8 *p);		//æ˜¾ç¤ºä¸€ä¸ªå­—ç¬¦ä¸²,12/16å­—ä½“
 	  
-void showimage(u16 x,u16 y); //ÏÔÊ¾40*40Í¼Æ¬
+void showimage(u16 x,u16 y); //æ˜¾ç¤º40*40å›¾ç‰‡
 void LCD_WriteReg(u8 LCD_Reg, u16 LCD_RegValue);
 void LCD_WriteRAM_Prepare(void);
-void LCD_WR_DATA8(u8 da);   //Ğ´8Î»Êı¾İ  
+void LCD_WR_DATA8(u8 da);   //å†™8ä½æ•°æ®
  
-void showhanzi16(unsigned int x,unsigned int y,unsigned char index);//16*16ºº×Ö
-void showhanzi32(unsigned int x,unsigned int y,unsigned char index);//32*32ºº×Ö						  		 
+void showhanzi16(unsigned int x,unsigned int y,unsigned char index);//16*16æ±‰å­—
+void showhanzi32(unsigned int x,unsigned int y,unsigned char index);//32*32æ±‰å­—
 #endif  
 	 
 	 

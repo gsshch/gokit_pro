@@ -20,14 +20,14 @@ _m_tp_dev tp_dev=
 	0,
 	0,	  	 		
 };					
-//Ä¬ÈÏÎªtouchtype=0µÄÊı¾İ.
+//é»˜è®¤ä¸ºtouchtype=0çš„æ•°æ®.
 u8 CMD_RDX=0XD0;
 u8 CMD_RDY=0X90;
 u16 SAVE_ADDR_BASE=0;	 
 			    					   
-//SPIĞ´Êı¾İ
-//Ïò´¥ÃşÆÁICĞ´Èë1byteÊı¾İ    
-//num:ÒªĞ´ÈëµÄÊı¾İ
+//SPIå†™æ•°æ®
+//å‘è§¦æ‘¸å±ICå†™å…¥1byteæ•°æ®
+//num:è¦å†™å…¥çš„æ•°æ®
 void TP_Write_Byte(u8 num)    
 {  
 	u8 count=0;   
@@ -37,44 +37,44 @@ void TP_Write_Byte(u8 num)
 		else TDIN=0;   
 		num<<=1;    
 		TCLK=0; 	 
-		TCLK=1;		//ÉÏÉıÑØÓĞĞ§	        
+		TCLK=1;		//ä¸Šå‡æ²¿æœ‰æ•ˆ
 	}		 			    
 } 		 
-//SPI¶ÁÊı¾İ 
-//´Ó´¥ÃşÆÁIC¶ÁÈ¡adcÖµ
-//CMD:Ö¸Áî
-//·µ»ØÖµ:¶Áµ½µÄÊı¾İ	   
+//SPIè¯»æ•°æ®
+//ä»è§¦æ‘¸å±ICè¯»å–adcå€¼
+//CMD:æŒ‡ä»¤
+//è¿”å›å€¼:è¯»åˆ°çš„æ•°æ®
 u16 TP_Read_AD(u8 CMD)	  
 { 	 
 	u8 count=0; 	  
 	u16 Num=0; 
-	TCLK=0;		//ÏÈÀ­µÍÊ±ÖÓ 	 
-	TDIN=0; 	//À­µÍÊı¾İÏß
-	TCS=0; 		//Ñ¡ÖĞ´¥ÃşÆÁIC
-	TP_Write_Byte(CMD);//·¢ËÍÃüÁî×Ö
-	delay_us(6);//ADS7846µÄ×ª»»Ê±¼ä×î³¤Îª6us
+	TCLK=0;		//å…ˆæ‹‰ä½æ—¶é’Ÿ
+	TDIN=0; 	//æ‹‰ä½æ•°æ®çº¿
+	TCS=0; 		//é€‰ä¸­è§¦æ‘¸å±IC
+	TP_Write_Byte(CMD);//å‘é€å‘½ä»¤å­—
+	delay_us(6);//ADS7846çš„è½¬æ¢æ—¶é—´æœ€é•¿ä¸º6us
 	TCLK=0; 	     	    
 	delay_us(1);    	   
-	TCLK=1;		//¸ø1¸öÊ±ÖÓ£¬Çå³ıBUSY	    	    
+	TCLK=1;		//ç»™1ä¸ªæ—¶é’Ÿï¼Œæ¸…é™¤BUSY
 	TCLK=0; 	     	    
-	for(count=0;count<16;count++)//¶Á³ö16Î»Êı¾İ,Ö»ÓĞ¸ß12Î»ÓĞĞ§ 
+	for(count=0;count<16;count++)//è¯»å‡º16ä½æ•°æ®,åªæœ‰é«˜12ä½æœ‰æ•ˆ
 	{ 				  
 		Num<<=1; 	 
-		TCLK=0;	//ÏÂ½µÑØÓĞĞ§  	    	   
+		TCLK=0;	//ä¸‹é™æ²¿æœ‰æ•ˆ
 		TCLK=1;
 		if(DOUT)Num++; 		 
 	}  	
-	Num>>=4;   	//Ö»ÓĞ¸ß12Î»ÓĞĞ§.
-	TCS=1;		//ÊÍ·ÅÆ¬Ñ¡	 
+	Num>>=4;   	//åªæœ‰é«˜12ä½æœ‰æ•ˆ.
+	TCS=1;		//é‡Šæ”¾ç‰‡é€‰
 	return(Num);   
 }
-//¶ÁÈ¡Ò»¸ö×ø±êÖµ(x»òÕßy)
-//Á¬Ğø¶ÁÈ¡READ_TIMES´ÎÊı¾İ,¶ÔÕâĞ©Êı¾İÉıĞòÅÅÁĞ,
-//È»ºóÈ¥µô×îµÍºÍ×î¸ßLOST_VAL¸öÊı,È¡Æ½¾ùÖµ 
-//xy:Ö¸Áî£¨CMD_RDX/CMD_RDY£©
-//·µ»ØÖµ:¶Áµ½µÄÊı¾İ
-#define READ_TIMES 10 	//¶ÁÈ¡´ÎÊı
-#define LOST_VAL 2	  	//¶ªÆúÖµ
+//è¯»å–ä¸€ä¸ªåæ ‡å€¼(xæˆ–è€…y)
+//è¿ç»­è¯»å–READ_TIMESæ¬¡æ•°æ®,å¯¹è¿™äº›æ•°æ®å‡åºæ’åˆ—,
+//ç„¶åå»æ‰æœ€ä½å’Œæœ€é«˜LOST_VALä¸ªæ•°,å–å¹³å‡å€¼
+//xy:æŒ‡ä»¤ï¼ˆCMD_RDX/CMD_RDYï¼‰
+//è¿”å›å€¼:è¯»åˆ°çš„æ•°æ®
+#define READ_TIMES 10 	//è¯»å–æ¬¡æ•°
+#define LOST_VAL 2	  	//ä¸¢å¼ƒå€¼
 u16 TP_Read_XOY(u8 xy)
 {
 	u16 i, j;
@@ -82,11 +82,11 @@ u16 TP_Read_XOY(u8 xy)
 	u16 sum=0;
 	u16 temp;
 	for(i=0;i<READ_TIMES;i++)buf[i]=TP_Read_AD(xy);		 		    
-	for(i=0;i<READ_TIMES-1; i++)//ÅÅĞò
+	for(i=0;i<READ_TIMES-1; i++)//æ’åº
 	{
 		for(j=i+1;j<READ_TIMES;j++)
 		{
-			if(buf[i]>buf[j])//ÉıĞòÅÅÁĞ
+			if(buf[i]>buf[j])//å‡åºæ’åˆ—
 			{
 				temp=buf[i];
 				buf[i]=buf[j];
@@ -99,26 +99,26 @@ u16 TP_Read_XOY(u8 xy)
 	temp=sum/(READ_TIMES-2*LOST_VAL);
 	return temp;   
 } 
-//¶ÁÈ¡x,y×ø±ê
-//×îĞ¡Öµ²»ÄÜÉÙÓÚ100.
-//x,y:¶ÁÈ¡µ½µÄ×ø±êÖµ
-//·µ»ØÖµ:0,Ê§°Ü;1,³É¹¦¡£
+//è¯»å–x,yåæ ‡
+//æœ€å°å€¼ä¸èƒ½å°‘äº100.
+//x,y:è¯»å–åˆ°çš„åæ ‡å€¼
+//è¿”å›å€¼:0,å¤±è´¥;1,æˆåŠŸã€‚
 u8 TP_Read_XY(u16 *x,u16 *y)
 {
 	u16 xtemp,ytemp;			 	 		  
 	xtemp=TP_Read_XOY(CMD_RDX);
 	ytemp=TP_Read_XOY(CMD_RDY);	  												   
-	//if(xtemp<100||ytemp<100)return 0;//¶ÁÊıÊ§°Ü
+	//if(xtemp<100||ytemp<100)return 0;//è¯»æ•°å¤±è´¥
 	*x=xtemp;
 	*y=ytemp;
-	return 1;//¶ÁÊı³É¹¦
+	return 1;//è¯»æ•°æˆåŠŸ
 }
-//Á¬Ğø2´Î¶ÁÈ¡´¥ÃşÆÁIC,ÇÒÕâÁ½´ÎµÄÆ«²î²»ÄÜ³¬¹ı
-//ERR_RANGE,Âú×ãÌõ¼ş,ÔòÈÏÎª¶ÁÊıÕıÈ·,·ñÔò¶ÁÊı´íÎó.	   
-//¸Ãº¯ÊıÄÜ´ó´óÌá¸ß×¼È·¶È
-//x,y:¶ÁÈ¡µ½µÄ×ø±êÖµ
-//·µ»ØÖµ:0,Ê§°Ü;1,³É¹¦¡£
-#define ERR_RANGE 30 //Îó²î·¶Î§ 
+//è¿ç»­2æ¬¡è¯»å–è§¦æ‘¸å±IC,ä¸”è¿™ä¸¤æ¬¡çš„åå·®ä¸èƒ½è¶…è¿‡
+//ERR_RANGE,æ»¡è¶³æ¡ä»¶,åˆ™è®¤ä¸ºè¯»æ•°æ­£ç¡®,å¦åˆ™è¯»æ•°é”™è¯¯.
+//è¯¥å‡½æ•°èƒ½å¤§å¤§æé«˜å‡†ç¡®åº¦
+//x,y:è¯»å–åˆ°çš„åæ ‡å€¼
+//è¿”å›å€¼:0,å¤±è´¥;1,æˆåŠŸã€‚
+#define ERR_RANGE 30 //è¯¯å·®èŒƒå›´
 u8 TP_Read_XY2(u16 *x,u16 *y) 
 {
 	u16 x1,y1;
@@ -128,7 +128,7 @@ u8 TP_Read_XY2(u16 *x,u16 *y)
     if(flag==0)return(0);
     flag=TP_Read_XY(&x2,&y2);	   
     if(flag==0)return(0);   
-    if(((x2<=x1&&x1<x2+ERR_RANGE)||(x1<=x2&&x2<x1+ERR_RANGE))//Ç°ºóÁ½´Î²ÉÑùÔÚ+-ERR_RANGEÄÚ
+    if(((x2<=x1&&x1<x2+ERR_RANGE)||(x1<=x2&&x2<x1+ERR_RANGE))//å‰åä¸¤æ¬¡é‡‡æ ·åœ¨+-ERR_RANGEå†…
     &&((y2<=y1&&y1<y2+ERR_RANGE)||(y1<=y2&&y2<y1+ERR_RANGE)))
     {
         *x=(x1+x2)/2;
@@ -137,60 +137,60 @@ u8 TP_Read_XY2(u16 *x,u16 *y)
     }else return 0;	  
 }  
 //////////////////////////////////////////////////////////////////////////////////		  
-//ÓëLCD²¿·ÖÓĞ¹ØµÄº¯Êı  
-//»­Ò»¸ö´¥Ãşµã
-//ÓÃÀ´Ğ£×¼ÓÃµÄ
-//x,y:×ø±ê
-//color:ÑÕÉ«
+//ä¸LCDéƒ¨åˆ†æœ‰å…³çš„å‡½æ•°
+//ç”»ä¸€ä¸ªè§¦æ‘¸ç‚¹
+//ç”¨æ¥æ ¡å‡†ç”¨çš„
+//x,y:åæ ‡
+//color:é¢œè‰²
 void TP_Drow_Touch_Point(u16 x,u16 y,u16 color)
 {
 	POINT_COLOR=color;
-	LCD_DrawLine(x-12,y,x+13,y);//ºáÏß
-	LCD_DrawLine(x,y-12,x,y+13);//ÊúÏß
+	LCD_DrawLine(x-12,y,x+13,y);//æ¨ªçº¿
+	LCD_DrawLine(x,y-12,x,y+13);//ç«–çº¿
 	LCD_DrawPoint(x+1,y+1);
 	LCD_DrawPoint(x-1,y+1);
 	LCD_DrawPoint(x+1,y-1);
 	LCD_DrawPoint(x-1,y-1);
-	Draw_Circle(x,y,6);//»­ÖĞĞÄÈ¦
+	Draw_Circle(x,y,6);//ç”»ä¸­å¿ƒåœˆ
 }	  
-//»­Ò»¸ö´óµã(2*2µÄµã)		   
-//x,y:×ø±ê
-//color:ÑÕÉ«
+//ç”»ä¸€ä¸ªå¤§ç‚¹(2*2çš„ç‚¹)
+//x,y:åæ ‡
+//color:é¢œè‰²
 void TP_Draw_Big_Point(u16 x,u16 y,u16 color)
 {	    
 	POINT_COLOR=color;
-	LCD_DrawPoint(x,y);//ÖĞĞÄµã 
+	LCD_DrawPoint(x,y);//ä¸­å¿ƒç‚¹
 	LCD_DrawPoint(x+1,y);
 	LCD_DrawPoint(x,y+1);
 	LCD_DrawPoint(x+1,y+1);	 	  	
 }						  
 //////////////////////////////////////////////////////////////////////////////////		  
-//´¥Ãş°´¼üÉ¨Ãè
-//tp:0,ÆÁÄ»×ø±ê;1,ÎïÀí×ø±ê(Ğ£×¼µÈÌØÊâ³¡ºÏÓÃ)
-//·µ»ØÖµ:µ±Ç°´¥ÆÁ×´Ì¬.
-//0,´¥ÆÁÎŞ´¥Ãş;1,´¥ÆÁÓĞ´¥Ãş
+//è§¦æ‘¸æŒ‰é”®æ‰«æ
+//tp:0,å±å¹•åæ ‡;1,ç‰©ç†åæ ‡(æ ¡å‡†ç­‰ç‰¹æ®Šåœºåˆç”¨)
+//è¿”å›å€¼:å½“å‰è§¦å±çŠ¶æ€.
+//0,è§¦å±æ— è§¦æ‘¸;1,è§¦å±æœ‰è§¦æ‘¸
 u8 TP_Scan(u8 tp)
 {			   
-	if(PEN==0)//ÓĞ°´¼ü°´ÏÂ
+	if(PEN==0)//æœ‰æŒ‰é”®æŒ‰ä¸‹
 	{
-		if(tp)TP_Read_XY2(&tp_dev.x,&tp_dev.y);//¶ÁÈ¡ÎïÀí×ø±ê
-		else if(TP_Read_XY2(&tp_dev.x,&tp_dev.y))//¶ÁÈ¡ÆÁÄ»×ø±ê
+		if(tp)TP_Read_XY2(&tp_dev.x,&tp_dev.y);//è¯»å–ç‰©ç†åæ ‡
+		else if(TP_Read_XY2(&tp_dev.x,&tp_dev.y))//è¯»å–å±å¹•åæ ‡
 		{
-	 		tp_dev.x=tp_dev.xfac*tp_dev.x+tp_dev.xoff;//½«½á¹û×ª»»ÎªÆÁÄ»×ø±ê
+	 		tp_dev.x=tp_dev.xfac*tp_dev.x+tp_dev.xoff;//å°†ç»“æœè½¬æ¢ä¸ºå±å¹•åæ ‡
 			tp_dev.y=tp_dev.yfac*tp_dev.y+tp_dev.yoff;  
 	 	} 
-		if((tp_dev.sta&TP_PRES_DOWN)==0)//Ö®Ç°Ã»ÓĞ±»°´ÏÂ
+		if((tp_dev.sta&TP_PRES_DOWN)==0)//ä¹‹å‰æ²¡æœ‰è¢«æŒ‰ä¸‹
 		{		 
-			tp_dev.sta=TP_PRES_DOWN|TP_CATH_PRES;//°´¼ü°´ÏÂ  
-			tp_dev.x0=tp_dev.x;//¼ÇÂ¼µÚÒ»´Î°´ÏÂÊ±µÄ×ø±ê
+			tp_dev.sta=TP_PRES_DOWN|TP_CATH_PRES;//æŒ‰é”®æŒ‰ä¸‹
+			tp_dev.x0=tp_dev.x;//è®°å½•ç¬¬ä¸€æ¬¡æŒ‰ä¸‹æ—¶çš„åæ ‡
 			tp_dev.y0=tp_dev.y;  	   			 
 		}			   
 	}else
 	{
-		if(tp_dev.sta&TP_PRES_DOWN)//Ö®Ç°ÊÇ±»°´ÏÂµÄ
+		if(tp_dev.sta&TP_PRES_DOWN)//ä¹‹å‰æ˜¯è¢«æŒ‰ä¸‹çš„
 		{
-			tp_dev.sta&=~(1<<7);//±ê¼Ç°´¼üËÉ¿ª	
-		}else//Ö®Ç°¾ÍÃ»ÓĞ±»°´ÏÂ
+			tp_dev.sta&=~(1<<7);//æ ‡è®°æŒ‰é”®æ¾å¼€
+		}else//ä¹‹å‰å°±æ²¡æœ‰è¢«æŒ‰ä¸‹
 		{
 			tp_dev.x0=0;
 			tp_dev.y0=0;
@@ -198,65 +198,65 @@ u8 TP_Scan(u8 tp)
 			tp_dev.y=0xffff;
 		}	    
 	}
-	return tp_dev.sta&TP_PRES_DOWN;//·µ»Øµ±Ç°µÄ´¥ÆÁ×´Ì¬
+	return tp_dev.sta&TP_PRES_DOWN;//è¿”å›å½“å‰çš„è§¦å±çŠ¶æ€
 }	  
 //////////////////////////////////////////////////////////////////////////	 
-//±£´æÔÚEEPROMÀïÃæµÄµØÖ·Çø¼ä»ùÖ·,Õ¼ÓÃ13¸ö×Ö½Ú(RANGE:SAVE_ADDR_BASE~SAVE_ADDR_BASE+12)
-//±£´æĞ£×¼²ÎÊı										    
+//ä¿å­˜åœ¨EEPROMé‡Œé¢çš„åœ°å€åŒºé—´åŸºå€,å ç”¨13ä¸ªå­—èŠ‚(RANGE:SAVE_ADDR_BASE~SAVE_ADDR_BASE+12)
+//ä¿å­˜æ ¡å‡†å‚æ•°
 void TP_Save_Adjdata(void)
 {
 	s32 temp;			 
 	//SPI_Flash_Erase_Sector(0);
-	//±£´æĞ£Õı½á¹û! 								  
-	temp=tp_dev.xfac*100000000;//±£´æxĞ£ÕıÒòËØ		
+	//ä¿å­˜æ ¡æ­£ç»“æœ!
+	temp=tp_dev.xfac*100000000;//ä¿å­˜xæ ¡æ­£å› ç´ 
 	//AT24CXX_WriteLenByte(SAVE_ADDR_BASE,temp,4);   
 	SPI_Flash_Write((void *)&temp,SAVE_ADDR_BASE,4);
-	temp=tp_dev.yfac*100000000;//±£´æyĞ£ÕıÒòËØ	  
+	temp=tp_dev.yfac*100000000;//ä¿å­˜yæ ¡æ­£å› ç´ 
 	//AT24CXX_WriteLenByte(SAVE_ADDR_BASE+4,temp,4);
 	SPI_Flash_Write((void *)&temp,SAVE_ADDR_BASE+4,4);
-	//±£´æxÆ«ÒÆÁ¿
+	//ä¿å­˜xåç§»é‡
 	//AT24CXX_WriteLenByte(SAVE_ADDR_BASE+8,tp_dev.xoff,2);	
 	SPI_Flash_Write((void *)&tp_dev.xoff,SAVE_ADDR_BASE+8,2);
-	//±£´æyÆ«ÒÆÁ¿
+	//ä¿å­˜yåç§»é‡
 	//AT24CXX_WriteLenByte(SAVE_ADDR_BASE+10,tp_dev.yoff,2);	
 	SPI_Flash_Write((void *)&tp_dev.yoff,SAVE_ADDR_BASE+10,2);
-	//±£´æ´¥ÆÁÀàĞÍ
+	//ä¿å­˜è§¦å±ç±»å‹
 	//AT24CXX_WriteOneByte(SAVE_ADDR_BASE+12,tp_dev.touchtype);	
 	SPI_Flash_Write((void *)&tp_dev.touchtype,SAVE_ADDR_BASE+12,1);
-	temp=0X0A;//±ê¼ÇĞ£×¼¹ıÁË
+	temp=0X0A;//æ ‡è®°æ ¡å‡†è¿‡äº†
 	//AT24CXX_WriteOneByte(SAVE_ADDR_BASE+13,temp); 
 	SPI_Flash_Write((void *)&temp,SAVE_ADDR_BASE+13,1);
 }
-//µÃµ½±£´æÔÚEEPROMÀïÃæµÄĞ£×¼Öµ
-//·µ»ØÖµ£º1£¬³É¹¦»ñÈ¡Êı¾İ
-//        0£¬»ñÈ¡Ê§°Ü£¬ÒªÖØĞÂĞ£×¼
+//å¾—åˆ°ä¿å­˜åœ¨EEPROMé‡Œé¢çš„æ ¡å‡†å€¼
+//è¿”å›å€¼ï¼š1ï¼ŒæˆåŠŸè·å–æ•°æ®
+//        0ï¼Œè·å–å¤±è´¥ï¼Œè¦é‡æ–°æ ¡å‡†
 u8 TP_Get_Adjdata(void)
 {					  
 	s32 tempfac;
 	tempfac = 0;		
 	SPI_Flash_Read((void *)&tempfac,SAVE_ADDR_BASE+13,1);
-	if(tempfac==0X0A)//´¥ÃşÆÁÒÑ¾­Ğ£×¼¹ıÁË			   
+	if(tempfac==0X0A)//è§¦æ‘¸å±å·²ç»æ ¡å‡†è¿‡äº†
 	{    												 
 		//tempfac=AT24CXX_ReadLenByte(SAVE_ADDR_BASE,4);		  
 		SPI_Flash_Read((void *)&tempfac,SAVE_ADDR_BASE,4);
-		tp_dev.xfac=(float)tempfac/100000000;//µÃµ½xĞ£×¼²ÎÊı
+		tp_dev.xfac=(float)tempfac/100000000;//å¾—åˆ°xæ ¡å‡†å‚æ•°
 		//tempfac=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+4,4);	
 		SPI_Flash_Read((void *)&tempfac,SAVE_ADDR_BASE+4,4);
-		tp_dev.yfac=(float)tempfac/100000000;//µÃµ½yĞ£×¼²ÎÊı
-	    //µÃµ½xÆ«ÒÆÁ¿
+		tp_dev.yfac=(float)tempfac/100000000;//å¾—åˆ°yæ ¡å‡†å‚æ•°
+	    //å¾—åˆ°xåç§»é‡
 		//tp_dev.xoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+8,2);	
 		SPI_Flash_Read((void *)&tp_dev.xoff,SAVE_ADDR_BASE+8,2);
- 	    //µÃµ½yÆ«ÒÆÁ¿
+ 	    //å¾—åˆ°yåç§»é‡
 		//tp_dev.yoff=AT24CXX_ReadLenByte(SAVE_ADDR_BASE+10,2);		
 		SPI_Flash_Read((void *)&tp_dev.yoff,SAVE_ADDR_BASE+10,2);
 		
- 		//tp_dev.touchtype=AT24CXX_ReadOneByte(SAVE_ADDR_BASE+12);//¶ÁÈ¡´¥ÆÁÀàĞÍ±ê¼Ç
+ 		//tp_dev.touchtype=AT24CXX_ReadOneByte(SAVE_ADDR_BASE+12);//è¯»å–è§¦å±ç±»å‹æ ‡è®°
  		SPI_Flash_Read((void *)&tp_dev.touchtype,SAVE_ADDR_BASE+12,1);
-		if(tp_dev.touchtype)//X,Y·½ÏòÓëÆÁÄ»Ïà·´
+		if(tp_dev.touchtype)//X,Yæ–¹å‘ä¸å±å¹•ç›¸å
 		{
 			CMD_RDX=0X90;
 			CMD_RDY=0XD0;	 
-		}else				   //X,Y·½ÏòÓëÆÁÄ»ÏàÍ¬
+		}else				   //X,Yæ–¹å‘ä¸å±å¹•ç›¸åŒ
 		{
 			CMD_RDX=0XD0;
 			CMD_RDY=0X90;	 
@@ -265,10 +265,10 @@ u8 TP_Get_Adjdata(void)
 	}
 	return 0;
 }	 
-//ÌáÊ¾×Ö·û´®
+//æç¤ºå­—ç¬¦ä¸²
 const u8* TP_REMIND_MSG_TBL="Please use the stylus click the cross on the screen.The cross will always move until the screen adjustment is completed.";
  					  
-//ÌáÊ¾Ğ£×¼½á¹û(¸÷¸ö²ÎÊı)
+//æç¤ºæ ¡å‡†ç»“æœ(å„ä¸ªå‚æ•°)
 void TP_Adj_Info_Show(u16 x0,u16 y0,u16 x1,u16 y1,u16 x2,u16 y2,u16 x3,u16 y3,u16 fac)
 {	  
 	POINT_COLOR=RED;
@@ -281,23 +281,23 @@ void TP_Adj_Info_Show(u16 x0,u16 y0,u16 x1,u16 y1,u16 x2,u16 y2,u16 x3,u16 y3,u1
 	LCD_ShowString(40,220,lcddev.width,lcddev.height,16,"x4:");
  	LCD_ShowString(40+80,220,lcddev.width,lcddev.height,16,"y4:");  
  	LCD_ShowString(40,240,lcddev.width,lcddev.height,16,"fac is:");     
-	LCD_ShowNum(40+24,160,x0,4,16);		//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24+80,160,y0,4,16);	//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24,180,x1,4,16);		//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24+80,180,y1,4,16);	//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24,200,x2,4,16);		//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24+80,200,y2,4,16);	//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24,220,x3,4,16);		//ÏÔÊ¾ÊıÖµ
-	LCD_ShowNum(40+24+80,220,y3,4,16);	//ÏÔÊ¾ÊıÖµ
- 	LCD_ShowNum(40+56,lcddev.width,fac,3,16); 	//ÏÔÊ¾ÊıÖµ,¸ÃÊıÖµ±ØĞëÔÚ95~105·¶Î§Ö®ÄÚ.
+	LCD_ShowNum(40+24,160,x0,4,16);		//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24+80,160,y0,4,16);	//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24,180,x1,4,16);		//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24+80,180,y1,4,16);	//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24,200,x2,4,16);		//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24+80,200,y2,4,16);	//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24,220,x3,4,16);		//æ˜¾ç¤ºæ•°å€¼
+	LCD_ShowNum(40+24+80,220,y3,4,16);	//æ˜¾ç¤ºæ•°å€¼
+ 	LCD_ShowNum(40+56,lcddev.width,fac,3,16); 	//æ˜¾ç¤ºæ•°å€¼,è¯¥æ•°å€¼å¿…é¡»åœ¨95~105èŒƒå›´ä¹‹å†….
 
 }
 		 
-//´¥ÃşÆÁĞ£×¼´úÂë
-//µÃµ½ËÄ¸öĞ£×¼²ÎÊı
+//è§¦æ‘¸å±æ ¡å‡†ä»£ç 
+//å¾—åˆ°å››ä¸ªæ ¡å‡†å‚æ•°
 void TP_Adjust(void)
 {								 
-	u16 pos_temp[4][2];//×ø±ê»º´æÖµ
+	u16 pos_temp[4][2];//åæ ‡ç¼“å­˜å€¼
 	u8  cnt=0;	
 	u16 d1,d2;
 	u32 tem1,tem2;
@@ -306,21 +306,21 @@ void TP_Adjust(void)
  	cnt=0;				
 	POINT_COLOR=BLUE;
 	BACK_COLOR =WHITE;
-	LCD_Clear(WHITE);//ÇåÆÁ   
-	POINT_COLOR=RED;//ºìÉ« 
-	LCD_Clear(WHITE);//ÇåÆÁ 	   
+	LCD_Clear(WHITE);//æ¸…å±
+	POINT_COLOR=RED;//çº¢è‰²
+	LCD_Clear(WHITE);//æ¸…å±
 	POINT_COLOR=BLACK;
-	LCD_ShowString(40,40,160,100,16,(u8*)TP_REMIND_MSG_TBL);//ÏÔÊ¾ÌáÊ¾ĞÅÏ¢
-	TP_Drow_Touch_Point(20,20,RED);//»­µã1 
-	tp_dev.sta=0;//Ïû³ı´¥·¢ĞÅºÅ 
-	tp_dev.xfac=0;//xfacÓÃÀ´±ê¼ÇÊÇ·ñĞ£×¼¹ı,ËùÒÔĞ£×¼Ö®Ç°±ØĞëÇåµô!ÒÔÃâ´íÎó	 
-	while(1)//Èç¹ûÁ¬Ğø10ÃëÖÓÃ»ÓĞ°´ÏÂ,Ôò×Ô¶¯ÍË³ö
+	LCD_ShowString(40,40,160,100,16,(u8*)TP_REMIND_MSG_TBL);//æ˜¾ç¤ºæç¤ºä¿¡æ¯
+	TP_Drow_Touch_Point(20,20,RED);//ç”»ç‚¹1
+	tp_dev.sta=0;//æ¶ˆé™¤è§¦å‘ä¿¡å·
+	tp_dev.xfac=0;//xfacç”¨æ¥æ ‡è®°æ˜¯å¦æ ¡å‡†è¿‡,æ‰€ä»¥æ ¡å‡†ä¹‹å‰å¿…é¡»æ¸…æ‰!ä»¥å…é”™è¯¯
+	while(1)//å¦‚æœè¿ç»­10ç§’é’Ÿæ²¡æœ‰æŒ‰ä¸‹,åˆ™è‡ªåŠ¨é€€å‡º
 	{	
-		tp_dev.scan(1);//É¨ÃèÎïÀí×ø±ê
-		if((tp_dev.sta&0xc0)==TP_CATH_PRES)//°´¼ü°´ÏÂÁËÒ»´Î(´ËÊ±°´¼üËÉ¿ªÁË.)
+		tp_dev.scan(1);//æ‰«æç‰©ç†åæ ‡
+		if((tp_dev.sta&0xc0)==TP_CATH_PRES)//æŒ‰é”®æŒ‰ä¸‹äº†ä¸€æ¬¡(æ­¤æ—¶æŒ‰é”®æ¾å¼€äº†.)
 		{	
 			outtime=0;		
-			tp_dev.sta&=~(1<<6);//±ê¼Ç°´¼üÒÑ¾­±»´¦Àí¹ıÁË.
+			tp_dev.sta&=~(1<<6);//æ ‡è®°æŒ‰é”®å·²ç»è¢«å¤„ç†è¿‡äº†.
 						   			   
 			pos_temp[cnt][0]=tp_dev.x;
 			pos_temp[cnt][1]=tp_dev.y;
@@ -328,99 +328,99 @@ void TP_Adjust(void)
 			switch(cnt)
 			{			   
 				case 1:						 
-					TP_Drow_Touch_Point(20,20,WHITE);				//Çå³ıµã1 
-					TP_Drow_Touch_Point(lcddev.width-20,20,RED);	//»­µã2
+					TP_Drow_Touch_Point(20,20,WHITE);				//æ¸…é™¤ç‚¹1
+					TP_Drow_Touch_Point(lcddev.width-20,20,RED);	//ç”»ç‚¹2
 					break;
 				case 2:
- 					TP_Drow_Touch_Point(lcddev.width-20,20,WHITE);	//Çå³ıµã2
-					TP_Drow_Touch_Point(20,lcddev.height-20,RED);	//»­µã3
+ 					TP_Drow_Touch_Point(lcddev.width-20,20,WHITE);	//æ¸…é™¤ç‚¹2
+					TP_Drow_Touch_Point(20,lcddev.height-20,RED);	//ç”»ç‚¹3
 					break;
 				case 3:
- 					TP_Drow_Touch_Point(20,lcddev.height-20,WHITE);			//Çå³ıµã3
- 					TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,RED);	//»­µã4
+ 					TP_Drow_Touch_Point(20,lcddev.height-20,WHITE);			//æ¸…é™¤ç‚¹3
+ 					TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,RED);	//ç”»ç‚¹4
 					break;
-				case 4:	 //È«²¿ËÄ¸öµãÒÑ¾­µÃµ½
-	    		    //¶Ô±ßÏàµÈ
+				case 4:	 //å…¨éƒ¨å››ä¸ªç‚¹å·²ç»å¾—åˆ°
+	    		    //å¯¹è¾¹ç›¸ç­‰
 					tem1=abs(pos_temp[0][0]-pos_temp[1][0]);//x1-x2
 					tem2=abs(pos_temp[0][1]-pos_temp[1][1]);//y1-y2
 					tem1*=tem1;
 					tem2*=tem2;
-					d1=sqrt(tem1+tem2);//µÃµ½1,2µÄ¾àÀë
+					d1=sqrt(tem1+tem2);//å¾—åˆ°1,2çš„è·ç¦»
 					
 					tem1=abs(pos_temp[2][0]-pos_temp[3][0]);//x3-x4
 					tem2=abs(pos_temp[2][1]-pos_temp[3][1]);//y3-y4
 					tem1*=tem1;
 					tem2*=tem2;
-					d2=sqrt(tem1+tem2);//µÃµ½3,4µÄ¾àÀë
+					d2=sqrt(tem1+tem2);//å¾—åˆ°3,4çš„è·ç¦»
 					fac=(float)d1/d2;
-					if(fac<0.9||fac>1.1||d1==0||d2==0)//²»ºÏ¸ñ
+					if(fac<0.9||fac>1.1||d1==0||d2==0)//ä¸åˆæ ¼
 					{
 						cnt=0;
- 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//Çå³ıµã4
-   	 					TP_Drow_Touch_Point(20,20,RED);								//»­µã1
- 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//ÏÔÊ¾Êı¾İ   
+ 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//æ¸…é™¤ç‚¹4
+   	 					TP_Drow_Touch_Point(20,20,RED);								//ç”»ç‚¹1
+ 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//æ˜¾ç¤ºæ•°æ®
  						continue;
 					}
 					tem1=abs(pos_temp[0][0]-pos_temp[2][0]);//x1-x3
 					tem2=abs(pos_temp[0][1]-pos_temp[2][1]);//y1-y3
 					tem1*=tem1;
 					tem2*=tem2;
-					d1=sqrt(tem1+tem2);//µÃµ½1,3µÄ¾àÀë
+					d1=sqrt(tem1+tem2);//å¾—åˆ°1,3çš„è·ç¦»
 					
 					tem1=abs(pos_temp[1][0]-pos_temp[3][0]);//x2-x4
 					tem2=abs(pos_temp[1][1]-pos_temp[3][1]);//y2-y4
 					tem1*=tem1;
 					tem2*=tem2;
-					d2=sqrt(tem1+tem2);//µÃµ½2,4µÄ¾àÀë
+					d2=sqrt(tem1+tem2);//å¾—åˆ°2,4çš„è·ç¦»
 					fac=(float)d1/d2;
-					if(fac<0.9||fac>1.1)//²»ºÏ¸ñ
+					if(fac<0.9||fac>1.1)//ä¸åˆæ ¼
 					{
 						cnt=0;
- 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//Çå³ıµã4
-   	 					TP_Drow_Touch_Point(20,20,RED);								//»­µã1
- 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//ÏÔÊ¾Êı¾İ   
+ 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//æ¸…é™¤ç‚¹4
+   	 					TP_Drow_Touch_Point(20,20,RED);								//ç”»ç‚¹1
+ 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//æ˜¾ç¤ºæ•°æ®
 						continue;
-					}//ÕıÈ·ÁË
+					}//æ­£ç¡®äº†
 								   
-					//¶Ô½ÇÏßÏàµÈ
+					//å¯¹è§’çº¿ç›¸ç­‰
 					tem1=abs(pos_temp[1][0]-pos_temp[2][0]);//x1-x3
 					tem2=abs(pos_temp[1][1]-pos_temp[2][1]);//y1-y3
 					tem1*=tem1;
 					tem2*=tem2;
-					d1=sqrt(tem1+tem2);//µÃµ½1,4µÄ¾àÀë
+					d1=sqrt(tem1+tem2);//å¾—åˆ°1,4çš„è·ç¦»
 	
 					tem1=abs(pos_temp[0][0]-pos_temp[3][0]);//x2-x4
 					tem2=abs(pos_temp[0][1]-pos_temp[3][1]);//y2-y4
 					tem1*=tem1;
 					tem2*=tem2;
-					d2=sqrt(tem1+tem2);//µÃµ½2,3µÄ¾àÀë
+					d2=sqrt(tem1+tem2);//å¾—åˆ°2,3çš„è·ç¦»
 					fac=(float)d1/d2;
-					if(fac<0.9||fac>1.1)//²»ºÏ¸ñ
+					if(fac<0.9||fac>1.1)//ä¸åˆæ ¼
 					{
 						cnt=0;
- 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//Çå³ıµã4
-   	 					TP_Drow_Touch_Point(20,20,RED);								//»­µã1
- 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//ÏÔÊ¾Êı¾İ   
+ 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//æ¸…é™¤ç‚¹4
+   	 					TP_Drow_Touch_Point(20,20,RED);								//ç”»ç‚¹1
+ 						TP_Adj_Info_Show(pos_temp[0][0],pos_temp[0][1],pos_temp[1][0],pos_temp[1][1],pos_temp[2][0],pos_temp[2][1],pos_temp[3][0],pos_temp[3][1],fac*100);//æ˜¾ç¤ºæ•°æ®
 						continue;
-					}//ÕıÈ·ÁË
-					//¼ÆËã½á¹û
-					tp_dev.xfac=(float)(lcddev.width-40)/(pos_temp[1][0]-pos_temp[0][0]);//µÃµ½xfac		 
-					tp_dev.xoff=(lcddev.width-tp_dev.xfac*(pos_temp[1][0]+pos_temp[0][0]))/2;//µÃµ½xoff
+					}//æ­£ç¡®äº†
+					//è®¡ç®—ç»“æœ
+					tp_dev.xfac=(float)(lcddev.width-40)/(pos_temp[1][0]-pos_temp[0][0]);//å¾—åˆ°xfac
+					tp_dev.xoff=(lcddev.width-tp_dev.xfac*(pos_temp[1][0]+pos_temp[0][0]))/2;//å¾—åˆ°xoff
 						  
-					tp_dev.yfac=(float)(lcddev.height-40)/(pos_temp[2][1]-pos_temp[0][1]);//µÃµ½yfac
-					tp_dev.yoff=(lcddev.height-tp_dev.yfac*(pos_temp[2][1]+pos_temp[0][1]))/2;//µÃµ½yoff  
-					if(abs(tp_dev.xfac)>2||abs(tp_dev.yfac)>2)//´¥ÆÁºÍÔ¤ÉèµÄÏà·´ÁË.
+					tp_dev.yfac=(float)(lcddev.height-40)/(pos_temp[2][1]-pos_temp[0][1]);//å¾—åˆ°yfac
+					tp_dev.yoff=(lcddev.height-tp_dev.yfac*(pos_temp[2][1]+pos_temp[0][1]))/2;//å¾—åˆ°yoff
+					if(abs(tp_dev.xfac)>2||abs(tp_dev.yfac)>2)//è§¦å±å’Œé¢„è®¾çš„ç›¸åäº†.
 					{
 						cnt=0;
- 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//Çå³ıµã4
-   	 					TP_Drow_Touch_Point(20,20,RED);								//»­µã1
+ 				    	TP_Drow_Touch_Point(lcddev.width-20,lcddev.height-20,WHITE);	//æ¸…é™¤ç‚¹4
+   	 					TP_Drow_Touch_Point(20,20,RED);								//ç”»ç‚¹1
 						LCD_ShowString(40,26,lcddev.width,lcddev.height,16,"TP Need readjust!");
-						tp_dev.touchtype=!tp_dev.touchtype;//ĞŞ¸Ä´¥ÆÁÀàĞÍ.
-						if(tp_dev.touchtype)//X,Y·½ÏòÓëÆÁÄ»Ïà·´
+						tp_dev.touchtype=!tp_dev.touchtype;//ä¿®æ”¹è§¦å±ç±»å‹.
+						if(tp_dev.touchtype)//X,Yæ–¹å‘ä¸å±å¹•ç›¸å
 						{
 							CMD_RDX=0X90;
 							CMD_RDY=0XD0;	 
-						}else				   //X,Y·½ÏòÓëÆÁÄ»ÏàÍ¬
+						}else				   //X,Yæ–¹å‘ä¸å±å¹•ç›¸åŒ
 						{
 							CMD_RDX=0XD0;
 							CMD_RDY=0X90;	 
@@ -428,12 +428,12 @@ void TP_Adjust(void)
 						continue;
 					}		
 					POINT_COLOR=BLUE;
-					LCD_Clear(WHITE);//ÇåÆÁ
-					LCD_ShowString(35,110,lcddev.width,lcddev.height,16,"Touch Screen Adjust OK!");//Ğ£ÕıÍê³É
+					LCD_Clear(WHITE);//æ¸…å±
+					LCD_ShowString(35,110,lcddev.width,lcddev.height,16,"Touch Screen Adjust OK!");//æ ¡æ­£å®Œæˆ
 					delay_ms(1000);
 					TP_Save_Adjdata();  
- 					LCD_Clear(WHITE);//ÇåÆÁ   
-					return;//Ğ£ÕıÍê³É				 
+ 					LCD_Clear(WHITE);//æ¸…å±
+					return;//æ ¡æ­£å®Œæˆ
 			}
 		}
 		delay_ms(10);
@@ -445,16 +445,16 @@ void TP_Adjust(void)
 	 	} 
  	}
 }		  
-//´¥ÃşÆÁ³õÊ¼»¯  		    
-//·µ»ØÖµ:0,Ã»ÓĞ½øĞĞĞ£×¼
-//       1,½øĞĞ¹ıĞ£×¼	  
-//´¥ÃşÆÁ³õÊ¼»¯  		    
-//·µ»ØÖµ:0,Ã»ÓĞ½øĞĞĞ£×¼
-//       1,½øĞĞ¹ıĞ£×¼
+//è§¦æ‘¸å±åˆå§‹åŒ–
+//è¿”å›å€¼:0,æ²¡æœ‰è¿›è¡Œæ ¡å‡†
+//       1,è¿›è¡Œè¿‡æ ¡å‡†
+//è§¦æ‘¸å±åˆå§‹åŒ–
+//è¿”å›å€¼:0,æ²¡æœ‰è¿›è¡Œæ ¡å‡†
+//       1,è¿›è¡Œè¿‡æ ¡å‡†
 u8 TP_Init(void)
 {	   
-	//×¢Òâ,Ê±ÖÓÊ¹ÄÜÖ®ºó,¶ÔGPIOµÄ²Ù×÷²ÅÓĞĞ§
-	//ËùÒÔÉÏÀ­Ö®Ç°,±ØĞëÊ¹ÄÜÊ±ÖÓ.²ÅÄÜÊµÏÖÕæÕıµÄÉÏÀ­Êä³ö 
+	//æ³¨æ„,æ—¶é’Ÿä½¿èƒ½ä¹‹å,å¯¹GPIOçš„æ“ä½œæ‰æœ‰æ•ˆ
+	//æ‰€ä»¥ä¸Šæ‹‰ä¹‹å‰,å¿…é¡»ä½¿èƒ½æ—¶é’Ÿ.æ‰èƒ½å®ç°çœŸæ­£çš„ä¸Šæ‹‰è¾“å‡º
 	GPIO_InitTypeDef GPIO_InitStructure;
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC,ENABLE);
 	//CS  SCLK MOSI 
@@ -463,7 +463,7 @@ u8 TP_Init(void)
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
-	//MISO INT ÉÏÀ­ÊäÈë
+	//MISO INT ä¸Šæ‹‰è¾“å…¥
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_10;
   	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
@@ -471,13 +471,13 @@ u8 TP_Init(void)
 
 
 	SAVE_ADDR_BASE=40;
-  	TP_Read_XY(&tp_dev.x,&tp_dev.y);//µÚÒ»´Î¶ÁÈ¡³õÊ¼»¯	 
+  	TP_Read_XY(&tp_dev.x,&tp_dev.y);//ç¬¬ä¸€æ¬¡è¯»å–åˆå§‹åŒ–
  	
-	if(TP_Get_Adjdata())return 0;//ÒÑ¾­Ğ£×¼
-	else			   //Î´Ğ£×¼?
+	if(TP_Get_Adjdata())return 0;//å·²ç»æ ¡å‡†
+	else			   //æœªæ ¡å‡†?
 	{ 										    
-	//	LCD_Clear(WHITE);//ÇåÆÁ
-	  //  TP_Adjust();  //ÆÁÄ»Ğ£×¼ 
+	//	LCD_Clear(WHITE);//æ¸…å±
+	  //  TP_Adjust();  //å±å¹•æ ¡å‡†
 	//	TP_Save_Adjdata();	 
 	}			
 	TP_Get_Adjdata();	
